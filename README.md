@@ -43,7 +43,16 @@ ipy.me/
 
 ## UI 设计
 
-- 深色主题（VS Code 风格）
+- 亮色/暗色主题（自动跟随系统，支持手动切换）
 - 左侧代码编辑区
 - 右侧/下方输出区
 - 响应式布局，支持移动端
+
+## 作者
+
+- **Ansen** - 项目发起人
+- **Antigravity (Google DeepMind)** - AI 编程助手
+
+## 许可证
+
+[MIT License](LICENSE)

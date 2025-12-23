@@ -12,6 +12,137 @@ const examplesSelect = document.getElementById('examples');
 const statusDot = document.querySelector('.status-dot');
 const statusText = document.querySelector('.status-text');
 const execTimeEl = document.getElementById('exec-time');
+const themeToggle = document.getElementById('theme-toggle');
+
+// Theme Management
+const THEME_KEY = 'ipy-theme';
+
+function getSystemTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function getCurrentTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved === 'light' || saved === 'dark') {
+        return saved;
+    }
+    return 'auto'; // Follow system
+}
+
+function applyTheme(theme) {
+    const root = document.documentElement;
+
+    if (theme === 'auto') {
+        // Remove data-theme to let CSS media query handle it
+        root.removeAttribute('data-theme');
+        localStorage.removeItem(THEME_KEY);
+    } else {
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem(THEME_KEY, theme);
+    }
+}
+
+function toggleTheme() {
+    const current = getCurrentTheme();
+    let next;
+
+    if (current === 'auto') {
+        // Auto -> opposite of system
+        next = getSystemTheme() === 'dark' ? 'light' : 'dark';
+    } else if (current === 'light') {
+        next = 'dark';
+    } else {
+        // dark -> auto
+        next = 'auto';
+    }
+
+    applyTheme(next);
+}
+
+// Initialize theme
+(function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) {
+        applyTheme(saved);
+    }
+})();
+
+// ========== Internationalization ==========
+const langToggle = document.getElementById('lang-toggle');
+const LANG_KEY = 'ipy-lang';
+
+const translations = {
+    zh: {
+        'status.loading': '正在加载 Python...',
+        'status.ready': 'Python 已就绪',
+        'status.running': '运行中...',
+        'status.error': '加载失败',
+        'panel.code': '📝 代码',
+        'panel.output': '💻 输出',
+        'examples.select': '选择示例...',
+        'examples.hello': 'Hello World',
+        'examples.loop': '循环示例',
+        'examples.function': '函数定义',
+        'examples.list': '列表操作',
+        'btn.run': '运行',
+        'btn.clear': '清空输出',
+        'footer.text': '由 Pyodide 驱动 · 代码在浏览器本地运行',
+        'output.empty': '(无输出)',
+        'output.enterCode': '请输入代码',
+        'error.load': '加载 Pyodide 失败'
+    },
+    en: {
+        'status.loading': 'Loading Python...',
+        'status.ready': 'Python Ready',
+        'status.running': 'Running...',
+        'status.error': 'Load Failed',
+        'panel.code': '📝 Code',
+        'panel.output': '💻 Output',
+        'examples.select': 'Select example...',
+        'examples.hello': 'Hello World',
+        'examples.loop': 'Loop Example',
+        'examples.function': 'Functions',
+        'examples.list': 'List Operations',
+        'btn.run': 'Run',
+        'btn.clear': 'Clear',
+        'footer.text': 'Powered by Pyodide · Code runs locally in browser',
+        'output.empty': '(no output)',
+        'output.enterCode': 'Please enter code',
+        'error.load': 'Failed to load Pyodide'
+    }
+};
+
+let currentLang = localStorage.getItem(LANG_KEY) || 'en';
+
+function t(key) {
+    return translations[currentLang][key] || translations['en'][key] || key;
+}
+
+function updatePageLanguage() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = t(key);
+    });
+
+    // Update lang toggle button text
+    langToggle.querySelector('span').textContent = currentLang === 'zh' ? 'EN' : '中';
+
+    // Update HTML lang attribute
+    document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+
+    // Update placeholder
+    const codeEl = document.getElementById('code');
+    codeEl.placeholder = currentLang === 'zh' ? '在这里输入 Python 代码...' : 'Enter Python code here...';
+}
+
+function toggleLanguage() {
+    currentLang = currentLang === 'zh' ? 'en' : 'zh';
+    localStorage.setItem(LANG_KEY, currentLang);
+    updatePageLanguage();
+}
+
+// Initialize language
+updatePageLanguage();
 
 // Pyodide instance
 let pyodide = null;
@@ -65,12 +196,12 @@ for i, fruit in enumerate(fruits, 1):
 // Initialize Pyodide
 async function initPyodide() {
     try {
-        setStatus('loading', '正在加载 Python...');
-        
+        setStatus('loading', t('status.loading'));
+
         pyodide = await loadPyodide({
             indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
         });
-        
+
         // Redirect stdout and stderr
         await pyodide.runPythonAsync(`
 import sys
@@ -97,13 +228,13 @@ _stderr_capture = OutputCapture()
 sys.stdout = _stdout_capture
 sys.stderr = _stderr_capture
         `);
-        
-        setStatus('ready', 'Python 已就绪');
+
+        setStatus('ready', t('status.ready'));
         runBtn.disabled = false;
-        
+
     } catch (error) {
-        setStatus('error', '加载失败');
-        outputEl.textContent = `加载 Pyodide 失败: ${error.message}`;
+        setStatus('error', t('status.error'));
+        outputEl.textContent = `${t('error.load')}: ${error.message}`;
         outputEl.classList.add('error');
     }
 }
@@ -117,61 +248,61 @@ function setStatus(state, text) {
 // Run Python code
 async function runCode() {
     const code = codeInput.value;
-    
+
     if (!code.trim()) {
-        outputEl.textContent = '请输入代码';
+        outputEl.textContent = t('output.enterCode');
         outputEl.classList.remove('error');
         return;
     }
-    
-    setStatus('running', '运行中...');
+
+    setStatus('running', t('status.running'));
     runBtn.disabled = true;
     outputEl.textContent = '';
     outputEl.classList.remove('error');
     execTimeEl.textContent = '';
-    
+
     const startTime = performance.now();
-    
+
     try {
         // Clear previous output
         await pyodide.runPythonAsync(`
 _stdout_capture.clear()
 _stderr_capture.clear()
         `);
-        
+
         // Execute user code
         await pyodide.runPythonAsync(code);
-        
+
         // Get output
         const stdout = await pyodide.runPythonAsync('_stdout_capture.getvalue()');
         const stderr = await pyodide.runPythonAsync('_stderr_capture.getvalue()');
-        
+
         const endTime = performance.now();
         const duration = ((endTime - startTime) / 1000).toFixed(3);
-        
+
         if (stderr) {
             outputEl.textContent = stderr;
             outputEl.classList.add('error');
         } else if (stdout) {
             outputEl.textContent = stdout;
         } else {
-            outputEl.textContent = '(无输出)';
+            outputEl.textContent = t('output.empty');
             outputEl.style.color = 'var(--text-secondary)';
         }
-        
+
         execTimeEl.textContent = `⏱ ${duration}s`;
-        setStatus('ready', 'Python 已就绪');
-        
+        setStatus('ready', t('status.ready'));
+
     } catch (error) {
         const endTime = performance.now();
         const duration = ((endTime - startTime) / 1000).toFixed(3);
-        
+
         outputEl.textContent = error.message;
         outputEl.classList.add('error');
         execTimeEl.textContent = `⏱ ${duration}s`;
-        setStatus('ready', 'Python 已就绪');
+        setStatus('ready', t('status.ready'));
     }
-    
+
     runBtn.disabled = false;
 }
 
@@ -195,6 +326,8 @@ function loadExample(name) {
 runBtn.addEventListener('click', runCode);
 clearBtn.addEventListener('click', clearOutput);
 examplesSelect.addEventListener('change', (e) => loadExample(e.target.value));
+themeToggle.addEventListener('click', toggleTheme);
+langToggle.addEventListener('click', toggleLanguage);
 
 // Keyboard shortcut: Ctrl/Cmd + Enter to run
 codeInput.addEventListener('keydown', (e) => {
@@ -204,7 +337,7 @@ codeInput.addEventListener('keydown', (e) => {
             runCode();
         }
     }
-    
+
     // Tab key for indentation
     if (e.key === 'Tab') {
         e.preventDefault();

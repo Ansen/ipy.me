@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -28,12 +28,17 @@
             </div>
             <div class="status" id="status">
                 <span class="status-dot loading"></span>
-                <span class="status-text">正在加载 Python...</span>
+                <span class="status-text" data-i18n="status.loading">正在加载 Python...</span>
             </div>
-            <button id="theme-toggle" class="theme-toggle" title="切换主题">
-                <span class="theme-icon light">☀️</span>
-                <span class="theme-icon dark">🌙</span>
-            </button>
+            <div class="header-actions">
+                <button id="lang-toggle" class="icon-btn" title="English / 中文">
+                    <span>EN</span>
+                </button>
+                <button id="theme-toggle" class="icon-btn" title="切换主题">
+                    <span class="theme-icon light">☀️</span>
+                    <span class="theme-icon dark">🌙</span>
+                </button>
+            </div>
         </header>
 
         <!-- Main Content -->
@@ -41,14 +46,14 @@
             <!-- Editor Panel -->
             <section class="panel editor-panel">
                 <div class="panel-header">
-                    <span class="panel-title">📝 代码</span>
+                    <span class="panel-title" data-i18n="panel.code">📝 代码</span>
                     <div class="panel-actions">
                         <select id="examples" class="examples-select">
-                            <option value="">选择示例...</option>
-                            <option value="hello">Hello World</option>
-                            <option value="loop">循环示例</option>
-                            <option value="function">函数定义</option>
-                            <option value="list">列表操作</option>
+                            <option value="" data-i18n="examples.select">选择示例...</option>
+                            <option value="hello" data-i18n="examples.hello">Hello World</option>
+                            <option value="loop" data-i18n="examples.loop">循环示例</option>
+                            <option value="function" data-i18n="examples.function">函数定义</option>
+                            <option value="list" data-i18n="examples.list">列表操作</option>
                         </select>
                     </div>
                 </div>
@@ -66,11 +71,11 @@ print(f"1 到 100 的和是：{result}")</textarea>
                 <div class="panel-footer">
                     <button id="run-btn" class="run-btn" disabled>
                         <span class="btn-icon">▶</span>
-                        <span class="btn-text">运行</span>
+                        <span class="btn-text" data-i18n="btn.run">运行</span>
                     </button>
                     <button id="clear-btn" class="clear-btn">
                         <span class="btn-icon">🗑</span>
-                        <span class="btn-text">清空输出</span>
+                        <span class="btn-text" data-i18n="btn.clear">清空输出</span>
                     </button>
                 </div>
             </section>
@@ -78,7 +83,7 @@ print(f"1 到 100 的和是：{result}")</textarea>
             <!-- Output Panel -->
             <section class="panel output-panel">
                 <div class="panel-header">
-                    <span class="panel-title">💻 输出</span>
+                    <span class="panel-title" data-i18n="panel.output">💻 输出</span>
                     <span class="output-time" id="exec-time"></span>
                 </div>
                 <div class="output-wrapper">
@@ -89,7 +94,7 @@ print(f"1 到 100 的和是：{result}")</textarea>
 
         <!-- Footer -->
         <footer class="footer">
-            <p>由 <a href="https://pyodide.org" target="_blank">Pyodide</a> 驱动 · 代码在浏览器本地运行，安全无忧</p>
+            <p><span data-i18n="footer.text">由 Pyodide 驱动 · 代码在浏览器本地运行</span></p>
         </footer>
     </div>
 
