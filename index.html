@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ipy.me - Python 在线运行</title>
+    <meta name="description" content="在浏览器中运行 Python 代码，无需安装，即开即用">
+
+    <!-- CodeMirror 6 -->
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@aspect-build/codemirror@0.4.0/dist/codemirror.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@aspect-build/codemirror@0.4.0/dist/codemirror.min.css">
+
+    <!-- Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🐍</span>
+                <h1>ipy.me</h1>
+            </div>
+            <div class="status" id="status">
+                <span class="status-dot loading"></span>
+                <span class="status-text">正在加载 Python...</span>
+            </div>
+            <button id="theme-toggle" class="theme-toggle" title="切换主题">
+                <span class="theme-icon light">☀️</span>
+                <span class="theme-icon dark">🌙</span>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Editor Panel -->
+            <section class="panel editor-panel">
+                <div class="panel-header">
+                    <span class="panel-title">📝 代码</span>
+                    <div class="panel-actions">
+                        <select id="examples" class="examples-select">
+                            <option value="">选择示例...</option>
+                            <option value="hello">Hello World</option>
+                            <option value="loop">循环示例</option>
+                            <option value="function">函数定义</option>
+                            <option value="list">列表操作</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="editor-wrapper">
+                    <textarea id="code" placeholder="在这里输入 Python 代码...">print("Hello, ipy.me! 🎉")
+
+# 试试这些：
+name = "Python"
+print(f"欢迎来到 {name} 的世界！")
+
+# 计算
+result = sum(range(1, 101))
+print(f"1 到 100 的和是：{result}")</textarea>
+                </div>
+                <div class="panel-footer">
+                    <button id="run-btn" class="run-btn" disabled>
+                        <span class="btn-icon">▶</span>
+                        <span class="btn-text">运行</span>
+                    </button>
+                    <button id="clear-btn" class="clear-btn">
+                        <span class="btn-icon">🗑</span>
+                        <span class="btn-text">清空输出</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Output Panel -->
+            <section class="panel output-panel">
+                <div class="panel-header">
+                    <span class="panel-title">💻 输出</span>
+                    <span class="output-time" id="exec-time"></span>
+                </div>
+                <div class="output-wrapper">
+                    <pre id="output" class="output"></pre>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>由 <a href="https://pyodide.org" target="_blank">Pyodide</a> 驱动 · 代码在浏览器本地运行，安全无忧</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
