@@ -139,16 +139,47 @@ function toggleLanguage() {
     currentLang = currentLang === 'zh' ? 'en' : 'zh';
     localStorage.setItem(LANG_KEY, currentLang);
     updatePageLanguage();
+    // Update default example if code hasn't been modified
+    loadDefaultExample();
+}
+
+// Load default example based on language
+function loadDefaultExample() {
+    if (examples.default && examples.default[currentLang]) {
+        codeInput.value = examples.default[currentLang];
+    }
 }
 
 // Initialize language
 updatePageLanguage();
+loadDefaultExample();
 
 // Pyodide instance
 let pyodide = null;
 
 // Code examples
 const examples = {
+    default: {
+        zh: `print("Hello, ipy.me! 🎉")
+
+# 试试这些：
+name = "Python"
+print(f"欢迎来到 {name} 的世界！")
+
+# 计算
+result = sum(range(1, 101))
+print(f"1 到 100 的和是：{result}")`,
+        en: `print("Hello, ipy.me! 🎉")
+
+# Try these:
+name = "Python"
+print(f"Welcome to the world of {name}!")
+
+# Calculate
+result = sum(range(1, 101))
+print(f"Sum of 1 to 100 is: {result}")`
+    },
+
     hello: {
         zh: `print("Hello, World! 🌍")
 print("欢迎来到 ipy.me！")`,

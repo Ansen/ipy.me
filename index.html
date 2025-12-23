@@ -69,13 +69,13 @@
             </div>
             <div class="status" id="status">
                 <span class="status-dot loading"></span>
-                <span class="status-text" data-i18n="status.loading">正在加载 Python...</span>
+                <span class="status-text" data-i18n="status.loading">Loading Python...</span>
             </div>
             <div class="header-actions">
                 <button id="lang-toggle" class="icon-btn" title="English / 中文">
                     <span>EN</span>
                 </button>
-                <button id="theme-toggle" class="icon-btn" title="切换主题">
+                <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
                     <span class="theme-icon light">☀️</span>
                     <span class="theme-icon dark">🌙</span>
                 </button>
@@ -87,36 +87,28 @@
             <!-- Editor Panel -->
             <section class="panel editor-panel">
                 <div class="panel-header">
-                    <span class="panel-title" data-i18n="panel.code">📝 代码</span>
+                    <span class="panel-title" data-i18n="panel.code">📝 Code</span>
                     <div class="panel-actions">
                         <select id="examples" class="examples-select">
-                            <option value="" data-i18n="examples.select">选择示例...</option>
+                            <option value="" data-i18n="examples.select">Select example...</option>
                             <option value="hello" data-i18n="examples.hello">Hello World</option>
-                            <option value="loop" data-i18n="examples.loop">循环示例</option>
-                            <option value="function" data-i18n="examples.function">函数定义</option>
-                            <option value="list" data-i18n="examples.list">列表操作</option>
+                            <option value="loop" data-i18n="examples.loop">Loop Example</option>
+                            <option value="function" data-i18n="examples.function">Functions</option>
+                            <option value="list" data-i18n="examples.list">List Operations</option>
                         </select>
                     </div>
                 </div>
                 <div class="editor-wrapper">
-                    <textarea id="code" placeholder="在这里输入 Python 代码...">print("Hello, ipy.me! 🎉")
-
-# 试试这些：
-name = "Python"
-print(f"欢迎来到 {name} 的世界！")
-
-# 计算
-result = sum(range(1, 101))
-print(f"1 到 100 的和是：{result}")</textarea>
+                    <textarea id="code" placeholder="Enter Python code here..."></textarea>
                 </div>
                 <div class="panel-footer">
                     <button id="run-btn" class="run-btn" disabled>
                         <span class="btn-icon">▶</span>
-                        <span class="btn-text" data-i18n="btn.run">运行</span>
+                        <span class="btn-text" data-i18n="btn.run">Run</span>
                     </button>
                     <button id="clear-btn" class="clear-btn">
                         <span class="btn-icon">🗑</span>
-                        <span class="btn-text" data-i18n="btn.clear">清空输出</span>
+                        <span class="btn-text" data-i18n="btn.clear">Clear</span>
                     </button>
                 </div>
             </section>
@@ -124,7 +116,7 @@ print(f"1 到 100 的和是：{result}")</textarea>
             <!-- Output Panel -->
             <section class="panel output-panel">
                 <div class="panel-header">
-                    <span class="panel-title" data-i18n="panel.output">💻 输出</span>
+                    <span class="panel-title" data-i18n="panel.output">💻 Output</span>
                     <span class="output-time" id="exec-time"></span>
                 </div>
                 <div class="output-wrapper">
@@ -135,7 +127,7 @@ print(f"1 到 100 的和是：{result}")</textarea>
 
         <!-- Footer -->
         <footer class="footer">
-            <p><span data-i18n="footer.text">由 Pyodide 驱动 · 代码在浏览器本地运行</span></p>
+            <p><span data-i18n="footer.text">Powered by Pyodide · Code runs locally in browser</span></p>
         </footer>
     </div>
 
