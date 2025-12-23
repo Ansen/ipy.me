@@ -149,18 +149,32 @@ let pyodide = null;
 
 // Code examples
 const examples = {
-    hello: `print("Hello, World! 🌍")
+    hello: {
+        zh: `print("Hello, World! 🌍")
 print("欢迎来到 ipy.me！")`,
+        en: `print("Hello, World! 🌍")
+print("Welcome to ipy.me!")`
+    },
 
-    loop: `# 循环示例
+    loop: {
+        zh: `# 循环示例
 for i in range(1, 6):
     print(f"第 {i} 次循环")
 
 # 列表推导式
 squares = [x**2 for x in range(1, 11)]
 print(f"1-10 的平方：{squares}")`,
+        en: `# Loop example
+for i in range(1, 6):
+    print(f"Loop iteration {i}")
 
-    function: `# 定义函数
+# List comprehension
+squares = [x**2 for x in range(1, 11)]
+print(f"Squares from 1-10: {squares}")`
+    },
+
+    function: {
+        zh: `# 定义函数
 def greet(name):
     return f"你好，{name}！欢迎学习 Python！"
 
@@ -172,8 +186,22 @@ def calculate_factorial(n):
 # 调用函数
 print(greet("开发者"))
 print(f"5 的阶乘是：{calculate_factorial(5)}")`,
+        en: `# Define functions
+def greet(name):
+    return f"Hello, {name}! Welcome to Python!"
 
-    list: `# 列表操作
+def calculate_factorial(n):
+    if n <= 1:
+        return 1
+    return n * calculate_factorial(n - 1)
+
+# Call functions
+print(greet("Developer"))
+print(f"Factorial of 5 is: {calculate_factorial(5)}")`
+    },
+
+    list: {
+        zh: `# 列表操作
 fruits = ["苹果", "香蕉", "橙子", "葡萄"]
 
 print("原始列表：", fruits)
@@ -190,7 +218,26 @@ print(f"共有 {len(fruits)} 种水果")
 # 遍历
 print("\\n所有水果：")
 for i, fruit in enumerate(fruits, 1):
+    print(f"  {i}. {fruit}")`,
+        en: `# List operations
+fruits = ["Apple", "Banana", "Orange", "Grape"]
+
+print("Original list:", fruits)
+print("First fruit:", fruits[0])
+print("Last fruit:", fruits[-1])
+
+# Add element
+fruits.append("Watermelon")
+print("After adding Watermelon:", fruits)
+
+# List length
+print(f"Total {len(fruits)} fruits")
+
+# Iterate
+print("\\nAll fruits:")
+for i, fruit in enumerate(fruits, 1):
     print(f"  {i}. {fruit}")`
+    }
 };
 
 // Initialize Pyodide
@@ -316,8 +363,8 @@ function clearOutput() {
 
 // Load example
 function loadExample(name) {
-    if (examples[name]) {
-        codeInput.value = examples[name];
+    if (examples[name] && examples[name][currentLang]) {
+        codeInput.value = examples[name][currentLang];
     }
     examplesSelect.value = '';
 }
