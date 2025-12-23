@@ -118,6 +118,123 @@ function t(key) {
     return translations[currentLang][key] || translations['en'][key] || key;
 }
 
+// Code examples - defined early so loadDefaultExample can use it
+const examples = {
+    default: {
+        zh: `print("Hello, ipy.me! \ud83c\udf89")
+
+# \u8bd5\u8bd5\u8fd9\u4e9b\uff1a
+name = "Python"
+print(f"\u6b22\u8fce\u6765\u5230 {name} \u7684\u4e16\u754c\uff01")
+
+# \u8ba1\u7b97
+result = sum(range(1, 101))
+print(f"1 \u5230 100 \u7684\u548c\u662f\uff1a{result}")`,
+        en: `print("Hello, ipy.me! \ud83c\udf89")
+
+# Try these:
+name = "Python"
+print(f"Welcome to the world of {name}!")
+
+# Calculate
+result = sum(range(1, 101))
+print(f"Sum of 1 to 100 is: {result}")`
+    },
+
+    hello: {
+        zh: `print("Hello, World! \ud83c\udf0d")
+print("\u6b22\u8fce\u6765\u5230 ipy.me\uff01")`,
+        en: `print("Hello, World! \ud83c\udf0d")
+print("Welcome to ipy.me!")`
+    },
+
+    loop: {
+        zh: `# \u5faa\u73af\u793a\u4f8b
+for i in range(1, 6):
+    print(f"\u7b2c {i} \u6b21\u5faa\u73af")
+
+# \u5217\u8868\u63a8\u5bfc\u5f0f
+squares = [x**2 for x in range(1, 11)]
+print(f"1-10 \u7684\u5e73\u65b9\uff1a{squares}")`,
+        en: `# Loop example
+for i in range(1, 6):
+    print(f"Loop iteration {i}")
+
+# List comprehension
+squares = [x**2 for x in range(1, 11)]
+print(f"Squares from 1-10: {squares}")`
+    },
+
+    function: {
+        zh: `# \u5b9a\u4e49\u51fd\u6570
+def greet(name):
+    return f"\u4f60\u597d\uff0c{name}\uff01\u6b22\u8fce\u5b66\u4e60 Python\uff01"
+
+def calculate_factorial(n):
+    if n <= 1:
+        return 1
+    return n * calculate_factorial(n - 1)
+
+# \u8c03\u7528\u51fd\u6570
+print(greet("\u5f00\u53d1\u8005"))
+print(f"5 \u7684\u9636\u4e58\u662f\uff1a{calculate_factorial(5)}")`,
+        en: `# Define functions
+def greet(name):
+    return f"Hello, {name}! Welcome to Python!"
+
+def calculate_factorial(n):
+    if n <= 1:
+        return 1
+    return n * calculate_factorial(n - 1)
+
+# Call functions
+print(greet("Developer"))
+print(f"Factorial of 5 is: {calculate_factorial(5)}")`
+    },
+
+    list: {
+        zh: `# \u5217\u8868\u64cd\u4f5c
+fruits = ["\u82f9\u679c", "\u9999\u8549", "\u6a59\u5b50", "\u8461\u8404"]
+
+print("\u539f\u59cb\u5217\u8868\uff1a", fruits)
+print("\u7b2c\u4e00\u4e2a\u6c34\u679c\uff1a", fruits[0])
+print("\u6700\u540e\u4e00\u4e2a\u6c34\u679c\uff1a", fruits[-1])
+
+# \u6dfb\u52a0\u5143\u7d20
+fruits.append("\u897f\u74dc")
+print("\u6dfb\u52a0\u897f\u74dc\u540e\uff1a", fruits)
+
+# \u5217\u8868\u957f\u5ea6
+print(f"\u5171\u6709 {len(fruits)} \u79cd\u6c34\u679c")
+
+# \u904d\u5386
+print("\\n\u6240\u6709\u6c34\u679c\uff1a")
+for i, fruit in enumerate(fruits, 1):
+    print(f"  {i}. {fruit}")`,
+        en: `# List operations
+fruits = ["Apple", "Banana", "Orange", "Grape"]
+
+print("Original list:", fruits)
+print("First fruit:", fruits[0])
+print("Last fruit:", fruits[-1])
+
+# Add element
+fruits.append("Watermelon")
+print("After adding Watermelon:", fruits)
+
+# List length
+print(f"Total {len(fruits)} fruits")
+
+# Iterate
+print("\\nAll fruits:")
+for i, fruit in enumerate(fruits, 1):
+    print(f"  {i}. {fruit}")`
+    }
+};
+
+// Load default example on page init
+loadDefaultExample();
+
 function updatePageLanguage() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -152,124 +269,9 @@ function loadDefaultExample() {
 
 // Initialize language
 updatePageLanguage();
-loadDefaultExample();
 
 // Pyodide instance
 let pyodide = null;
-
-// Code examples
-const examples = {
-    default: {
-        zh: `print("Hello, ipy.me! 🎉")
-
-# 试试这些：
-name = "Python"
-print(f"欢迎来到 {name} 的世界！")
-
-# 计算
-result = sum(range(1, 101))
-print(f"1 到 100 的和是：{result}")`,
-        en: `print("Hello, ipy.me! 🎉")
-
-# Try these:
-name = "Python"
-print(f"Welcome to the world of {name}!")
-
-# Calculate
-result = sum(range(1, 101))
-print(f"Sum of 1 to 100 is: {result}")`
-    },
-
-    hello: {
-        zh: `print("Hello, World! 🌍")
-print("欢迎来到 ipy.me！")`,
-        en: `print("Hello, World! 🌍")
-print("Welcome to ipy.me!")`
-    },
-
-    loop: {
-        zh: `# 循环示例
-for i in range(1, 6):
-    print(f"第 {i} 次循环")
-
-# 列表推导式
-squares = [x**2 for x in range(1, 11)]
-print(f"1-10 的平方：{squares}")`,
-        en: `# Loop example
-for i in range(1, 6):
-    print(f"Loop iteration {i}")
-
-# List comprehension
-squares = [x**2 for x in range(1, 11)]
-print(f"Squares from 1-10: {squares}")`
-    },
-
-    function: {
-        zh: `# 定义函数
-def greet(name):
-    return f"你好，{name}！欢迎学习 Python！"
-
-def calculate_factorial(n):
-    if n <= 1:
-        return 1
-    return n * calculate_factorial(n - 1)
-
-# 调用函数
-print(greet("开发者"))
-print(f"5 的阶乘是：{calculate_factorial(5)}")`,
-        en: `# Define functions
-def greet(name):
-    return f"Hello, {name}! Welcome to Python!"
-
-def calculate_factorial(n):
-    if n <= 1:
-        return 1
-    return n * calculate_factorial(n - 1)
-
-# Call functions
-print(greet("Developer"))
-print(f"Factorial of 5 is: {calculate_factorial(5)}")`
-    },
-
-    list: {
-        zh: `# 列表操作
-fruits = ["苹果", "香蕉", "橙子", "葡萄"]
-
-print("原始列表：", fruits)
-print("第一个水果：", fruits[0])
-print("最后一个水果：", fruits[-1])
-
-# 添加元素
-fruits.append("西瓜")
-print("添加西瓜后：", fruits)
-
-# 列表长度
-print(f"共有 {len(fruits)} 种水果")
-
-# 遍历
-print("\\n所有水果：")
-for i, fruit in enumerate(fruits, 1):
-    print(f"  {i}. {fruit}")`,
-        en: `# List operations
-fruits = ["Apple", "Banana", "Orange", "Grape"]
-
-print("Original list:", fruits)
-print("First fruit:", fruits[0])
-print("Last fruit:", fruits[-1])
-
-# Add element
-fruits.append("Watermelon")
-print("After adding Watermelon:", fruits)
-
-# List length
-print(f"Total {len(fruits)} fruits")
-
-# Iterate
-print("\\nAll fruits:")
-for i, fruit in enumerate(fruits, 1):
-    print(f"  {i}. {fruit}")`
-    }
-};
 
 // Initialize Pyodide
 async function initPyodide() {
